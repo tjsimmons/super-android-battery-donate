@@ -11,14 +11,18 @@ import android.widget.RemoteViews;
 import android.appwidget.AppWidgetManager;
 
 public class BatteryActivity extends Activity {
-	Context context = this;
-	AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-	RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.main);
-	ComponentName thisWidget = new ComponentName(context, GameBatteryMeterWidgetProvider.class);
+	Context context;
+	AppWidgetManager appWidgetManager;
+	RemoteViews views;
+	ComponentName thisWidget;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		context = this;
+		appWidgetManager = AppWidgetManager.getInstance(context);
+		views = new RemoteViews(context.getPackageName(), R.layout.main);
+		thisWidget = new ComponentName(context, GameBatteryMeterWidgetProvider.class);
 		getBatteryLevel();
 	}
 	
@@ -43,3 +47,4 @@ public class BatteryActivity extends Activity {
 	    registerReceiver(batteryLevelReceiver, batteryLevelFilter);
 	}
 }
+
