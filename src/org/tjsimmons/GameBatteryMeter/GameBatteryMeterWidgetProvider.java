@@ -17,10 +17,10 @@ public class GameBatteryMeterWidgetProvider extends AppWidgetProvider {
 			
 			Log.v("GameBatteryMeterWidgetProvider::onUpdate", "update");
 			
-			Intent intent = new Intent(context, BatteryActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			Intent intent = new Intent(context, BatteryUpdateService.class);
+			//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			
-			context.startActivity(intent);
+			context.startService(intent);
 		}
 	}
 }

@@ -1,24 +1,33 @@
 package org.tjsimmons.GameBatteryMeter;
 
-import android.app.Activity;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
+import android.os.Binder;
+import android.os.IBinder;
 import android.widget.RemoteViews;
 import android.appwidget.AppWidgetManager;
 
-public class BatteryActivity extends Activity {
+public class BatteryUpdateService extends Service {
 	Context context;
 	AppWidgetManager appWidgetManager;
 	RemoteViews views;
 	ComponentName thisWidget;
 	
+	private final IBinder mBinder = new LocalBinder();
+	
+	public class LocalBinder extends Binder {
+        BatteryUpdateService getService() {
+            return BatteryUpdateService.this;
+        }
+    }
+	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onCreate() {
+		super.onCreate();
 		context = this;
 		appWidgetManager = AppWidgetManager.getInstance(context);
 		views = new RemoteViews(context.getPackageName(), R.layout.main);
@@ -45,6 +54,11 @@ public class BatteryActivity extends Activity {
 	    
 	    IntentFilter batteryLevelFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 	    registerReceiver(batteryLevelReceiver, batteryLevelFilter);
+	}
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		return mBinder;
 	}
 }
 

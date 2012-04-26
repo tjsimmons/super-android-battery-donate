@@ -9,9 +9,6 @@
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-		
-		<activity android:name=".BatteryActivity">
-		</activity>
         
 	    <receiver android:name=".GameBatteryMeterWidgetProvider" android:label="@string/app_name" >
 	    	<intent-filter>
@@ -20,6 +17,7 @@
 	    	<meta-data android:name="android.appwidget.provider"
 	               android:resource="@xml/meter_appwidget_provider" />
 		</receiver>
+	    <service android:name="BatteryUpdateService"></service>
 	</application>
 
 </manifest>
