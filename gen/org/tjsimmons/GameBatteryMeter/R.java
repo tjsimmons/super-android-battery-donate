@@ -35,6 +35,8 @@ public final class R {
         public static final int zero=0x7f020015;
     }
     public static final class id {
+        public static final int charge_image=0x7f060002;
+        public static final int energy_image=0x7f060001;
         public static final int status_image=0x7f060000;
     }
     public static final class layout {

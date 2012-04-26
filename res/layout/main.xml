@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
@@ -7,6 +7,30 @@
         android:id="@+id/status_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/hundred" 
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/description"
+        android:src="@drawable/hundred" />
+
+    <ImageView
+        android:id="@+id/energy_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/status_image"
+        android:layout_alignRight="@+id/status_image"
+        android:layout_below="@+id/status_image"
+        android:scaleType="fitStart"
+        android:src="@drawable/energy"
         android:contentDescription="@string/description" />
-</LinearLayout>
+
+    <ImageView
+        android:id="@+id/charge_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/energy_image"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/status_image"
+        android:src="@drawable/chargeoff"
+        android:contentDescription="@string/description" />
+
+</RelativeLayout>

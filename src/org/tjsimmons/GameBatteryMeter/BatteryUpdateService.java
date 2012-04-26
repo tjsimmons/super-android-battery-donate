@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.widget.RemoteViews;
@@ -18,12 +19,12 @@ public class BatteryUpdateService extends Service {
 	RemoteViews views;
 	ComponentName thisWidget;
 	Handler serviceHandler;
-	long updateMillis = 60000;
+	long statusUpdateMillis = 5000;//600000;		// 10 minutes
 	
-	private Runnable updateBatteryTask = new Runnable() {
+	private Runnable updateBatteryLevelTask = new Runnable() {
 		public void run() {
 			updateBatteryLevel();
-			serviceHandler.postDelayed(this, updateMillis);
+			serviceHandler.postDelayed(this, statusUpdateMillis);
 		}
 	};
 	
@@ -31,7 +32,7 @@ public class BatteryUpdateService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		
-		Log.v("BatteryUpdateService::onCreate", "onCreate called");
+		//Log.v("BatteryUpdateService::onCreate", "onCreate called");
 		
 		serviceHandler = new Handler();
 		
@@ -40,50 +41,76 @@ public class BatteryUpdateService extends Service {
 		views = new RemoteViews(context.getPackageName(), R.layout.main);
 		thisWidget = new ComponentName(context, GameBatteryMeterWidgetProvider.class);
 		
-		serviceHandler.post(updateBatteryTask);
+		//serviceHandler.post(updateBatteryChargeTask);
+		serviceHandler.post(updateBatteryLevelTask);
 	}
 	
 	@Override
 	public void onDestroy() {
-		serviceHandler.removeCallbacks(updateBatteryTask);
-		Log.v("BatteryUpdateService::onDestroy", "onDestroy called");
+		serviceHandler.removeCallbacks(updateBatteryLevelTask);
+		//serviceHandler.removeCallbacks(updateBatteryChargeTask);
+		//Log.v("BatteryUpdateService::onDestroy", "onDestroy called");
 		super.onDestroy();
 	}
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.v("BatteryUpdateService::onStartCommand", "onStartCommand called");
+		//Log.v("BatteryUpdateService::onStartCommand", "onStartCommand called");
 		return START_STICKY;
 	}
 	
 	private void updateBatteryLevel() {
-		Log.v("BatteryUpdateService::updateBatteryLevel", "updateBatteryLevel called");
-	    BroadcastReceiver batteryLevelReceiver = new BroadcastReceiver() {
-	        public void onReceive(Context context, Intent intent) {
+		//Log.v("BatteryUpdateService::updateBatteryLevel", "updateBatteryLevel called");
+	    BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
+	        public void onReceive(Context context, Intent intent) {	        	
 	            context.unregisterReceiver(this);
 	            
-	            int rawlevel = intent.getIntExtra("level", -1);
-	            int scale = intent.getIntExtra("scale", -1);
-	            int level = -1;
-	            int resID;
-	            String mDrawableName;
-	            
-	            if (rawlevel >= 0 && scale > 0) {
-	                level = (rawlevel * 100) / scale;
-	            }
-	            
-	            mDrawableName = numToWord(((Integer) (level / 10)).toString() + "0");
-	            
-	            resID = getResources().getIdentifier(mDrawableName, "drawable", getPackageName());
-	            
-	            views.setImageViewResource(R.id.status_image, resID);
+	            updateChargeStatus(intent);
+	            updateCapacityStatus(intent);
 	            
 	            appWidgetManager.updateAppWidget(thisWidget, views);
 	        }
 	    };
 	    
-	    IntentFilter batteryLevelFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-	    registerReceiver(batteryLevelReceiver, batteryLevelFilter);
+	    IntentFilter batteryFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+	    registerReceiver(batteryReceiver, batteryFilter);
+	}
+	
+	private void updateChargeStatus(Intent intent) {
+		//Log.v("BatteryUpdateService::updateChargeStatus", "updateChargeStatus called");
+	
+		String mDrawableName = "chargeoff";
+		int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        boolean isCharging = 	status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                				status == BatteryManager.BATTERY_STATUS_FULL;
+        int statusID;
+        
+        if (isCharging) {
+        	mDrawableName = "chargeon";
+        }
+        
+        //Log.v("BatteryUpdateService::updateChargeStatus", "Charge Status: " + isCharging + ", Image: " + mDrawableName);
+        
+        statusID = getResources().getIdentifier(mDrawableName, "drawable", getPackageName());
+        views.setImageViewResource(R.id.charge_image, statusID);
+	}
+	
+	private void updateCapacityStatus(Intent intent) {
+		int rawlevel = intent.getIntExtra("level", -1);
+        int scale = intent.getIntExtra("scale", -1);
+        int level = -1;
+        int levelID;
+        String mDrawableName;
+        
+        if (rawlevel >= 0 && scale > 0) {
+            level = (rawlevel * 100) / scale;
+        }
+        
+        mDrawableName = numToWord(((Integer) (level / 10)).toString() + "0");
+        
+        levelID = getResources().getIdentifier(mDrawableName, "drawable", getPackageName());
+        
+        views.setImageViewResource(R.id.status_image, levelID);
 	}
 	
 	private String numToWord(String num) {

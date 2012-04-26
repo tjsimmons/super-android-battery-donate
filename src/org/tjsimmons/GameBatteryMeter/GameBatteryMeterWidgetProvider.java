@@ -14,8 +14,6 @@ public class GameBatteryMeterWidgetProvider extends AppWidgetProvider {
 		for (int i = 0; i < appWidgetIds.length; i++) {
 			views = new RemoteViews(context.getPackageName(), R.layout.main); 
 			
-			//Log.v("GameBatteryMeterWidgetProvider::onUpdate", "update");
-			
 			Intent intent = new Intent(context, BatteryUpdateService.class);
 			
 			context.startService(intent);
