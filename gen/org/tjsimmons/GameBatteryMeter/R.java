@@ -11,16 +11,38 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int alignment=0x7f020000;
+        public static final int alignmentalpha=0x7f020001;
+        public static final int chargeoff=0x7f020002;
+        public static final int chargeoffalpha=0x7f020003;
+        public static final int chargeon=0x7f020004;
+        public static final int chargeonalpha=0x7f020005;
+        public static final int eighty=0x7f020006;
+        public static final int energy=0x7f020007;
+        public static final int energyalpha=0x7f020008;
+        public static final int fifty=0x7f020009;
+        public static final int forty=0x7f02000a;
+        public static final int hundred=0x7f02000b;
+        public static final int ic_launcher=0x7f02000c;
+        public static final int ninety=0x7f02000d;
+        public static final int off=0x7f02000e;
+        public static final int on=0x7f02000f;
+        public static final int seventy=0x7f020010;
+        public static final int sixty=0x7f020011;
+        public static final int ten=0x7f020012;
+        public static final int thirty=0x7f020013;
+        public static final int twenty=0x7f020014;
+        public static final int zero=0x7f020015;
     }
     public static final class id {
-        public static final int status_text=0x7f060000;
+        public static final int status_image=0x7f060000;
     }
     public static final class layout {
         public static final int main=0x7f030000;
     }
     public static final class string {
         public static final int app_name=0x7f050001;
+        public static final int description=0x7f050002;
         public static final int hello=0x7f050000;
     }
     public static final class xml {

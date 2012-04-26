@@ -3,5 +3,6 @@
 
     <string name="hello">Hello World, GameBatteryMeterActivity!</string>
     <string name="app_name">GameBatteryMeter</string>
+    <string name="description">Status image</string>
 
 </resources>
