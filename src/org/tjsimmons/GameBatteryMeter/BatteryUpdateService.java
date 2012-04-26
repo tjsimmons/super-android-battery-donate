@@ -6,36 +6,59 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 import android.appwidget.AppWidgetManager;
+import android.util.Log;
 
 public class BatteryUpdateService extends Service {
 	Context context;
 	AppWidgetManager appWidgetManager;
 	RemoteViews views;
 	ComponentName thisWidget;
+	Handler serviceHandler;
+	long updateMillis = 60000;
 	
-	private final IBinder mBinder = new LocalBinder();
-	
-	public class LocalBinder extends Binder {
-        BatteryUpdateService getService() {
-            return BatteryUpdateService.this;
-        }
-    }
+	private Runnable updateBatteryTask = new Runnable() {
+		public void run() {
+			updateBatteryLevel();
+			serviceHandler.postDelayed(this, updateMillis);
+		}
+	};
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		//Log.v("BatteryUpdateService::onCreate", "onCreate called");
+		
+		serviceHandler = new Handler();
+		
 		context = this;
 		appWidgetManager = AppWidgetManager.getInstance(context);
 		views = new RemoteViews(context.getPackageName(), R.layout.main);
 		thisWidget = new ComponentName(context, GameBatteryMeterWidgetProvider.class);
-		getBatteryLevel();
+		
+		serviceHandler.post(updateBatteryTask);
+		//getBatteryLevel();
 	}
 	
-	private void getBatteryLevel() {
+	@Override
+	public void onDestroy() {
+		serviceHandler.removeCallbacks(updateBatteryTask);
+		//Log.v("BatteryUpdateService::onDestroy", "onDestroy called");
+		super.onDestroy();
+	}
+	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		//Log.v("BatteryUpdateService::onStartCommand", "onStartCommand called");
+		return START_STICKY;
+	}
+	
+	private void updateBatteryLevel() {
+		//Log.v("BatteryUpdateService::updateBatteryLevel", "updateBatteryLevel called");
 	    BroadcastReceiver batteryLevelReceiver = new BroadcastReceiver() {
 	        public void onReceive(Context context, Intent intent) {
 	            context.unregisterReceiver(this);
@@ -58,7 +81,7 @@ public class BatteryUpdateService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return mBinder;
+		return null;
 	}
 }
 
