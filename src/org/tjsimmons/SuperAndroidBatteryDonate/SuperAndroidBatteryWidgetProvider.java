@@ -1,4 +1,4 @@
-package org.tjsimmons.SuperAndroidBattery;
+package org.tjsimmons.SuperAndroidBatteryDonate;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;

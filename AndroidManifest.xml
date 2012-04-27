@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.tjsimmons.SuperAndroidBattery"
-    android:versionCode="11"
-    android:versionName="1.1" >
+    package="org.tjsimmons.SuperAndroidBatteryDonate"
+    android:versionCode="12"
+    android:versionName="1.2" >
 
-    <uses-sdk android:minSdkVersion="5" />
+    <uses-sdk android:minSdkVersion="7" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <supports-screens />
 
     <application
         android:icon="@drawable/icon"
@@ -18,8 +19,8 @@
 	    	<meta-data android:name="android.appwidget.provider"
 	               android:resource="@xml/meter_appwidget_provider" />
 		</receiver>
-	    <service android:name="org.tjsimmons.SuperAndroidBattery.BatteryUpdateService"></service>
-	    <receiver android:name="org.tjsimmons.SuperAndroidBattery.BootCompletedReceiver">
+	    <service android:name=".BatteryUpdateService"></service>
+	    <receiver android:name=".BootCompletedReceiver">
 	        <intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
 				<category android:name="android.intent.category.HOME" />

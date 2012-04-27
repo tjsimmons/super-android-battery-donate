@@ -1,4 +1,4 @@
-package org.tjsimmons.SuperAndroidBattery;
+package org.tjsimmons.SuperAndroidBatteryDonate;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

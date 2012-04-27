@@ -1,4 +1,4 @@
-package org.tjsimmons.SuperAndroidBattery;
+package org.tjsimmons.SuperAndroidBatteryDonate;
 
 import java.lang.Thread;
 import android.app.Service;
