@@ -89,6 +89,8 @@ public class BatteryUpdateService extends Service {
         	mDrawableName = "chargeon";
         }
         
+        mDrawableName += "alpha";
+        
         //Log.v("BatteryUpdateService::updateChargeStatus", "Charge Status: " + isCharging + ", Image: " + mDrawableName);
         
         statusID = getResources().getIdentifier(mDrawableName, "drawable", getPackageName());
