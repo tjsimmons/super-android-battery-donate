@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-public class GameBatteryMeterWidgetProvider extends AppWidgetProvider {
+public class SuperAndroidBatteryWidgetProvider extends AppWidgetProvider {
 	RemoteViews views;
 	
 	@Override

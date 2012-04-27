@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="hello">Hello World, GameBatteryMeterActivity!</string>
-    <string name="app_name">GameBatteryMeter</string>
-    <string name="description">Status image</string>
+    <string name="app_name">Super Android Battery</string>
+    <string name="description">Image</string>
 
 </resources>

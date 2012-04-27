@@ -40,7 +40,7 @@ public class BatteryUpdateService extends Service {
 		context = this;
 		appWidgetManager = AppWidgetManager.getInstance(context);
 		views = new RemoteViews(context.getPackageName(), R.layout.main);
-		thisWidget = new ComponentName(context, GameBatteryMeterWidgetProvider.class);
+		thisWidget = new ComponentName(context, SuperAndroidBatteryWidgetProvider.class);
 		
 		// set a new UEH handler, which isn't a great solution but hey! it'll do
 		Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler("/sdcard/superandroidbattery", context));
