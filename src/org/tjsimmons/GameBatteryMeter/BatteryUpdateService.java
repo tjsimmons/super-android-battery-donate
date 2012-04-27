@@ -1,5 +1,7 @@
 package org.tjsimmons.GameBatteryMeter;
 
+import java.lang.Thread.UncaughtExceptionHandler;
+import java.lang.Thread;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -40,6 +42,9 @@ public class BatteryUpdateService extends Service {
 		appWidgetManager = AppWidgetManager.getInstance(context);
 		views = new RemoteViews(context.getPackageName(), R.layout.main);
 		thisWidget = new ComponentName(context, GameBatteryMeterWidgetProvider.class);
+		
+		// set a new UEH handler, which isn't a great solution but hey! it'll do
+		Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler("/sdcard/superandroidbattery", context));
 		
 		//serviceHandler.post(updateBatteryChargeTask);
 		serviceHandler.post(updateBatteryLevelTask);
