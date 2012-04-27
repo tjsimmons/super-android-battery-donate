@@ -66,7 +66,7 @@ public class BatteryUpdateService extends Service {
 	private void updateBatteryLevel() {
 		//Log.v("BatteryUpdateService::updateBatteryLevel", "updateBatteryLevel called");
 	    BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
-	        public void onReceive(Context context, Intent intent) {	        	
+	        public void onReceive(Context context, Intent intent) {
 	            context.unregisterReceiver(this);
 	            
 	            updateChargeStatus(intent);

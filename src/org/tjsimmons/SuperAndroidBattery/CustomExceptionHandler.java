@@ -37,7 +37,7 @@ public class CustomExceptionHandler implements UncaughtExceptionHandler {
         String filename = timestamp + ".stacktrace";
 
         if (localPath != null) {
-            writeToFile(stacktrace, filename);
+        	writeToFile(stacktrace, filename);
         }        
 
         defaultUEH.uncaughtException(t, e);
