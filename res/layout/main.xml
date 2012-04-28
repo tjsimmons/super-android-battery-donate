@@ -9,7 +9,7 @@
 	
     <LinearLayout
         android:orientation="vertical"
-        android:layout_weight="0.65"
+        android:layout_weight="0.6"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_gravity="center"
@@ -19,9 +19,9 @@
 	        android:id="@+id/status_image"        
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_gravity="left"
+	        android:layout_gravity="center"
 	        android:contentDescription="@string/description"
-	        android:scaleType="fitXY"
+	        android:scaleType="fitCenter"
 	        android:src="@drawable/hundred" />
 	
 	    <ImageView
@@ -31,6 +31,7 @@
 	        android:layout_gravity="left"
 	        android:src="@drawable/energyalpha"
 	        android:scaleType="fitXY"
+	        android:layout_marginTop="-7dp"
 	        android:contentDescription="@string/description" />
     </LinearLayout>
    
@@ -41,7 +42,6 @@
         android:layout_gravity="center"
         android:src="@drawable/chargeonalpha"
         android:contentDescription="@string/description" 
-        android:scaleType="fitXY"
-        android:layout_weight="0.35" />
-    
+        android:scaleType="fitXY" 
+        android:layout_weight="0.4" />    
 </LinearLayout>
