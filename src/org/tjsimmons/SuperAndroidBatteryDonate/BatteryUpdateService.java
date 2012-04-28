@@ -67,7 +67,11 @@ public class BatteryUpdateService extends Service {
 		//Log.v("BatteryUpdateService::updateBatteryLevel", "updateBatteryLevel called");
 	    BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
 	        public void onReceive(Context context, Intent intent) {
-	            context.unregisterReceiver(this);
+	        	try {
+	        		context.unregisterReceiver(this);
+	        	} catch (IllegalArgumentException e) {
+	        		
+	        	}
 	            
 	            updateChargeStatus(intent);
 	            updateCapacityStatus(intent);
