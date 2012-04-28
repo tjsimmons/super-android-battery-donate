@@ -20,7 +20,7 @@ public class BatteryUpdateService extends Service {
 	RemoteViews views;
 	ComponentName thisWidget;
 	Handler serviceHandler;
-	long statusUpdateMillis = 5000;//600000;		// 10 minutes
+	long statusUpdateMillis = 5000;
 	
 	private Runnable updateBatteryLevelTask = new Runnable() {
 		public void run() {
@@ -43,7 +43,7 @@ public class BatteryUpdateService extends Service {
 		thisWidget = new ComponentName(context, SuperAndroidBatteryWidgetProvider.class);
 		
 		// set a new UEH handler, which isn't a great solution but hey! it'll do
-		Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler("/sdcard/superandroidbattery", context));
+		Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(/*"/sdcard/superandroidbattery",*/ context));
 		
 		//serviceHandler.post(updateBatteryChargeTask);
 		serviceHandler.post(updateBatteryLevelTask);
