@@ -2,5 +2,7 @@
 <resources>
     <string name="app_name">Super Android Battery (Donate)</string>
     <string name="description">Image</string>
+    <string name="widget_2x1">Super Android Battery (Donate) 2x1</string>
+    <string name="widget_1x1">Super Android Battery (Donate) 1x1</string>
 
 </resources>

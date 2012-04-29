@@ -1,14 +1,6 @@
 package org.tjsimmons.SuperAndroidBatteryDonate;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import android.content.Context;
 import android.content.Intent;
 
@@ -39,7 +31,7 @@ public class CustomExceptionHandler implements UncaughtExceptionHandler {
 
         if (localPath != null) {
         	writeToFile(stacktrace, filename);
-        }*/
+        }*/       
 
         defaultUEH.uncaughtException(t, e);
         
@@ -50,10 +42,11 @@ public class CustomExceptionHandler implements UncaughtExceptionHandler {
     }
 
     /*private void writeToFile(String stacktrace, String filename) {
-    	File parentDir = new File("/sdcard/superandroidbattery");
-	  	if (!parentDir.exists()) {
-	  		parentDir.mkdirs();
-	  	}
+    	  File parentDir = new File("/sdcard/superandroidbattery");
+    	  if (!parentDir.exists()) {
+    		  parentDir.mkdirs();
+    	  }
+    	  
         try {
             BufferedWriter bos = new BufferedWriter(new FileWriter(
                     localPath + "/" + filename));

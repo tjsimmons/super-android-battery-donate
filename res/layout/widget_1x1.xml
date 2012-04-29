@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:padding="8dp" >
+       
+	    <ImageView
+	        android:id="@+id/status_image_1x1"        
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center"
+	        android:contentDescription="@string/description"
+	        android:scaleType="fitCenter"
+	        android:src="@drawable/status_100" />
+	
+	    <ImageView
+	        android:id="@+id/energy_image_1x1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="bottom"
+	        android:src="@drawable/energy_alpha"
+	        android:scaleType="fitCenter"
+	        android:layout_marginTop="-10dp"
+	        android:contentDescription="@string/description" />
+</LinearLayout>

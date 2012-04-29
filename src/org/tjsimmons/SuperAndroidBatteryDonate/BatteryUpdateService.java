@@ -1,6 +1,5 @@
 package org.tjsimmons.SuperAndroidBatteryDonate;
 
-import java.lang.Thread;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -17,14 +16,22 @@ import android.util.Log;
 public class BatteryUpdateService extends Service {
 	Context context;
 	AppWidgetManager appWidgetManager;
-	RemoteViews views;
-	ComponentName thisWidget;
+	RemoteViews views_2x1;
+	RemoteViews views_1x1;
+	ComponentName widget_2x1;
+	ComponentName widget_1x1;
 	Handler serviceHandler;
 	long statusUpdateMillis = 5000;
 	
 	private Runnable updateBatteryLevelTask = new Runnable() {
 		public void run() {
-			updateBatteryLevel();
+			
+			try {
+				updateBatteryLevel();
+			} catch (Exception e) {
+				Log.w("updateBatteryLevelTask", "Unable to update battery level: " + e.toString());
+			}
+			
 			serviceHandler.postDelayed(this, statusUpdateMillis);
 		}
 	};
@@ -33,38 +40,41 @@ public class BatteryUpdateService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		
-		//Log.v("BatteryUpdateService::onCreate", "onCreate called");
+		////Log.v("BatteryUpdateService::onCreate", "onCreate called");
 		
 		serviceHandler = new Handler();
 		
 		context = this;
 		appWidgetManager = AppWidgetManager.getInstance(context);
-		views = new RemoteViews(context.getPackageName(), R.layout.main);
-		thisWidget = new ComponentName(context, SuperAndroidBatteryWidgetProvider.class);
+		
+		views_2x1 = new RemoteViews(context.getPackageName(), R.layout.widget_2x1);
+		views_1x1 = new RemoteViews(context.getPackageName(), R.layout.widget_1x1);
+		
+		
+		widget_2x1 = new ComponentName(context, WidgetProvider_2x1.class);
+		widget_1x1 = new ComponentName(context, WidgetProvider_1x1.class);
 		
 		// set a new UEH handler, which isn't a great solution but hey! it'll do
-		Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(/*"/sdcard/superandroidbattery",*/ context));
+		//Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(context));
 		
-		//serviceHandler.post(updateBatteryChargeTask);
 		serviceHandler.post(updateBatteryLevelTask);
 	}
 	
 	@Override
 	public void onDestroy() {
 		serviceHandler.removeCallbacks(updateBatteryLevelTask);
-		//serviceHandler.removeCallbacks(updateBatteryChargeTask);
-		//Log.v("BatteryUpdateService::onDestroy", "onDestroy called");
+		////Log.v("BatteryUpdateService::onDestroy", "onDestroy called");
 		super.onDestroy();
 	}
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		//Log.v("BatteryUpdateService::onStartCommand", "onStartCommand called");
+		////Log.v("BatteryUpdateService::onStartCommand", "onStartCommand called");
 		return START_STICKY;
 	}
 	
 	private void updateBatteryLevel() {
-		//Log.v("BatteryUpdateService::updateBatteryLevel", "updateBatteryLevel called");
+		////Log.v("BatteryUpdateService::updateBatteryLevel", "updateBatteryLevel called");
 	    BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
 	        public void onReceive(Context context, Intent intent) {
 	        	try {
@@ -76,7 +86,17 @@ public class BatteryUpdateService extends Service {
 	            updateChargeStatus(intent);
 	            updateCapacityStatus(intent);
 	            
-	            appWidgetManager.updateAppWidget(thisWidget, views);
+	            try {
+	            	appWidgetManager.updateAppWidget(widget_2x1, views_2x1);
+	            } catch (Exception e) {
+	            	Log.e("updateBatteryLevel", "Unable to update widget_2x1: " + e.toString());
+	            }
+	            
+	            try {
+	            	appWidgetManager.updateAppWidget(widget_1x1, views_1x1);
+	            } catch (Exception e) {
+	            	Log.e("updateBatteryLevel", "Unable to update widget_1x1: " + e.toString());
+	            }
 	        }
 	    };
 	    
@@ -85,24 +105,29 @@ public class BatteryUpdateService extends Service {
 	}
 	
 	private void updateChargeStatus(Intent intent) {
-		//Log.v("BatteryUpdateService::updateChargeStatus", "updateChargeStatus called");
+		////Log.v("BatteryUpdateService::updateChargeStatus", "updateChargeStatus called");
 	
-		String mDrawableName = "chargeoff";
+		String mDrawableName_1x1 = "energy_alpha";
+		String mDrawableName_2x1 = "charge_off_";
 		int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
         boolean isCharging = 	status == BatteryManager.BATTERY_STATUS_CHARGING ||
                 				status == BatteryManager.BATTERY_STATUS_FULL;
-        int statusID;
+        int statusID_2x1, statusID_1x1;
         
         if (isCharging) {
-        	mDrawableName = "chargeon";
+        	mDrawableName_2x1 = "charge_on_";
+        	mDrawableName_1x1 = "charge_yellow";
         }
         
-        mDrawableName += "alpha";
+        mDrawableName_2x1 += "alpha";
         
         //Log.v("BatteryUpdateService::updateChargeStatus", "Charge Status: " + isCharging + ", Image: " + mDrawableName);
         
-        statusID = getResources().getIdentifier(mDrawableName, "drawable", getPackageName());
-        views.setImageViewResource(R.id.charge_image, statusID);
+        statusID_1x1 = getResources().getIdentifier(mDrawableName_1x1, "drawable", getPackageName());
+        statusID_2x1 = getResources().getIdentifier(mDrawableName_2x1, "drawable", getPackageName());
+        
+        views_1x1.setImageViewResource(R.id.energy_image_1x1, statusID_1x1);
+        views_2x1.setImageViewResource(R.id.charge_image_2x1, statusID_2x1);
 	}
 	
 	private void updateCapacityStatus(Intent intent) {
@@ -116,61 +141,21 @@ public class BatteryUpdateService extends Service {
             level = (rawlevel * 100) / scale;
         }
         
-        mDrawableName = numToWord(((Integer) (level / 10)).toString() + "0");
+        mDrawableName = "status_" + ((Integer) (level / 10)).toString() + "0";
         
         levelID = getResources().getIdentifier(mDrawableName, "drawable", getPackageName());
         
-        views.setImageViewResource(R.id.status_image, levelID);
-	}
-	
-	private String numToWord(String num) {
-		String word;
-		
-		switch (Integer.parseInt(num)) {
-		case 0:
-			word = "zero";
-			break;
-		case 10:
-			word = "ten";
-			break;
-		case 20:
-			word = "twenty";
-			break;
-		case 30:
-			word = "thirty";
-			break;
-		case 40:
-			word = "forty";
-			break;
-		case 50:
-			word = "fifty";
-			break;
-		case 60:
-			word = "sixty";
-			break;
-		case 70:
-			word = "seventy";
-			break;
-		case 80:
-			word = "eighty";
-			break;
-		case 90:
-			word = "ninety";
-			break;
-		case 100:
-			word = "hundred";
-			break;
-		default:
-			word = "hundred";
-			break;
-		}
-		
-		return word;
+        views_2x1.setImageViewResource(R.id.status_image_2x1, levelID);
+        views_1x1.setImageViewResource(R.id.status_image_1x1, levelID);
+        
+        //Log.v("updateCapacityStatus", "mDrawableName: " + mDrawableName);
+        //Log.v("updateCapacityStatus", "levelID: " + ((Integer) levelID).toString());
+        //Log.v("updateCapacityStatus", "Battery capacity: " + ((Integer) level).toString() + "%");
 	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return null;
+		return null;	// we don't bind. don't even know what that is.
 	}
 }
 
