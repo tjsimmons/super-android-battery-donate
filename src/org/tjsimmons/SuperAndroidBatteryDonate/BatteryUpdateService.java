@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.os.Handler;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 import android.appwidget.AppWidgetManager;
@@ -20,31 +19,14 @@ public class BatteryUpdateService extends Service {
 	RemoteViews views_1x1;
 	ComponentName widget_2x1;
 	ComponentName widget_1x1;
-	Handler serviceHandler;
+	BroadcastReceiver batteryReceiver;
 	boolean under20 = false;
-	long statusUpdateMillis = 5000;
-	
-	private Runnable updateBatteryLevelTask = new Runnable() {
-		public void run() {
-			
-			try {
-				updateBatteryLevel();
-			} catch (Exception e) {
-				Log.w("updateBatteryLevelTask", "Unable to update battery level: " + e.toString());
-			}
-			
-			serviceHandler.postDelayed(this, statusUpdateMillis);
-		}
-	};
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		
-		////Log.v("BatteryUpdateService::onCreate", "onCreate called");
-		
-		serviceHandler = new Handler();
-		
+		////Log.v("BatteryUpdateService::onCreate", "onCreate called");		
 		context = this;
 		appWidgetManager = AppWidgetManager.getInstance(context);
 		
@@ -58,32 +40,8 @@ public class BatteryUpdateService extends Service {
 		// set a new UEH handler, which isn't a great solution but hey! it'll do
 		//Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(context));
 		
-		serviceHandler.post(updateBatteryLevelTask);
-	}
-	
-	@Override
-	public void onDestroy() {
-		serviceHandler.removeCallbacks(updateBatteryLevelTask);
-		////Log.v("BatteryUpdateService::onDestroy", "onDestroy called");
-		super.onDestroy();
-	}
-	
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		////Log.v("BatteryUpdateService::onStartCommand", "onStartCommand called");
-		return START_STICKY;
-	}
-	
-	private void updateBatteryLevel() {
-		////Log.v("BatteryUpdateService::updateBatteryLevel", "updateBatteryLevel called");
-	    BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
-	        public void onReceive(Context context, Intent intent) {
-	        	try {
-	        		context.unregisterReceiver(this);
-	        	} catch (IllegalArgumentException e) {
-	        		
-	        	}
-	            
+		batteryReceiver = new BroadcastReceiver() {
+	        public void onReceive(Context context, Intent intent) {	            
 	        	updateCapacityStatus(intent);
 	        	updateChargeStatus(intent);
 	            
@@ -103,6 +61,19 @@ public class BatteryUpdateService extends Service {
 	    
 	    IntentFilter batteryFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 	    registerReceiver(batteryReceiver, batteryFilter);
+	}
+	
+	@Override
+	public void onDestroy() {
+		////Log.v("BatteryUpdateService::onDestroy", "onDestroy called");
+		unregisterReceiver(batteryReceiver);
+		super.onDestroy();
+	}
+	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		////Log.v("BatteryUpdateService::onStartCommand", "onStartCommand called");
+		return START_STICKY;
 	}
 	
 	private void updateChargeStatus(Intent intent) {
@@ -172,7 +143,7 @@ public class BatteryUpdateService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return null;	// we don't bind. don't even know what that is.
+		return null; // don't bind, it's for widgets
 	}
 }
 
